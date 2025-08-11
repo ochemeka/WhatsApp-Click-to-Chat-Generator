@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Click-to-Chat Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #25D366, #128C7E, #075E54);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .main-content {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .left-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .right-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .whatsapp-icon {
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 30px;
+        }
+
+        h1 {
+            color: #075E54;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #075E54;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .phone-input {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 0 15px;
+            transition: all 0.3s ease;
+        }
+
+        .phone-input:focus-within {
+            border-color: #25D366;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+        }
+
+        .phone-prefix {
+            color: #075E54;
+            font-weight: 600;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #25D366;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+            background: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            border: 2px dashed #25D366;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            color: #075E54;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .url-display {
+            background: white;
+            border: 2px solid #25D366;
+            border-radius: 10px;
+            padding: 15px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 15px;
+            color: #075E54;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .copy-btn, .test-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .copy-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .copy-btn:hover {
+            background: #138496;
+            transform: translateY(-1px);
+        }
+
+        .test-btn {
+            background: #25D366;
+            color: white;
+        }
+
+        .test-btn:hover {
+            background: #128C7E;
+            transform: translateY(-1px);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            border: 1px solid #c3e6cb;
+        }
+
+        .info-box {
+            background: rgba(37, 211, 102, 0.1);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            height: fit-content;
+        }
+
+        .features-list {
+            background: rgba(18, 140, 126, 0.1);
+            border: 1px solid rgba(18, 140, 126, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .features-list h3 {
+            color: #075E54;
+            margin-bottom: 15px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .features-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: #25D366;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .info-box h3 {
+            color: #075E54;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info-box p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .main-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="whatsapp-icon">📱</div>
+            <h1>WhatsApp Click-to-Chat Generator</h1>
+            <p class="subtitle">Create instant WhatsApp links for any phone number</p>
+        </div>
+
+        <div class="main-content">
+            <div class="left-section">
+                <div class="info-box">
+                    <h3>📋 How to use:</h3>
+                    <p><strong>1.</strong> Select your country code from the dropdown</p>
+                    <p><strong>2.</strong> Enter your phone number (without country code)</p>
+                    <p><strong>3.</strong> Add your custom pre-filled message</p>
+                    <p><strong>4.</strong> Click generate to create your WhatsApp link!</p>
+                </div>
+
+                <div class="features-list">
+                    <h3>🚀 Features:</h3>
+                    <ul>
+                        <li>Support for 15+ countries</li>
+                        <li>Custom pre-filled messages</li>
+                        <li>Instant link generation</li>
+                        <li>Copy to clipboard</li>
+                        <li>Test link functionality</li>
+                        <li>Mobile-responsive design</li>
+                        <li>Clean, professional URLs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="right-section">
+                <form id="whatsappForm">
+                    <div class="form-group">
+                        <label for="countryCode">Country Code</label>
+                        <select id="countryCode" style="padding: 15px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 16px; background: #f8f9fa; width: 100%;">
+                            <option value="1">🇺🇸 +1 (USA/Canada)</option>
+                            <option value="44">🇬🇧 +44 (UK)</option>
+                            <option value="234" selected>🇳🇬 +234 (Nigeria)</option>
+                            <option value="91">🇮🇳 +91 (India)</option>
+                            <option value="86">🇨🇳 +86 (China)</option>
+                            <option value="33">🇫🇷 +33 (France)</option>
+                            <option value="49">🇩🇪 +49 (Germany)</option>
+                            <option value="81">🇯🇵 +81 (Japan)</option>
+                            <option value="55">🇧🇷 +55 (Brazil)</option>
+                            <option value="27">🇿🇦 +27 (South Africa)</option>
+                            <option value="61">🇦🇺 +61 (Australia)</option>
+                            <option value="971">🇦🇪 +971 (UAE)</option>
+                            <option value="966">🇸🇦 +966 (Saudi Arabia)</option>
+                            <option value="60">🇲🇾 +60 (Malaysia)</option>
+                            <option value="65">🇸🇬 +65 (Singapore)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number (without country code)</label>
+                        <input type="text" id="phoneNumber" placeholder="e.g., 8126680011" style="padding: 15px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 16px; background: #f8f9fa; width: 100%;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Pre-filled Message (Optional)</label>
+                        <textarea id="message" placeholder="Hello! I'm interested in your services"></textarea>
+                    </div>
+
+                    <button type="button" class="generate-btn" onclick="generateWhatsAppLink()">
+                        🚀 Generate WhatsApp Link
+                    </button>
+                </form>
+
+                <div id="resultSection" class="result-section">
+                    <div class="result-title">✅ Your WhatsApp Link is Ready!</div>
+                    <div id="urlDisplay" class="url-display"></div>
+                    <div class="action-buttons">
+                        <button class="copy-btn" onclick="copyToClipboard()">📋 Copy Link</button>
+                        <button class="test-btn" onclick="testLink()">🔗 Test Link</button>
+                    </div>
+                    <div id="successMessage" class="success-message">
+                        Link copied to clipboard! 🎉
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let generatedUrl = '';
+
+        function generateWhatsAppLink() {
+            const countryCode = document.getElementById('countryCode').value;
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const message = document.getElementById('message').value.trim();
+            
+            // Validate inputs
+            if (!phoneNumber) {
+                alert('Please enter a phone number');
+                return;
+            }
+            
+            // Clean phone number (remove spaces, dashes, etc.)
+            const cleanedNumber = phoneNumber.replace(/[^\d]/g, '');
+            
+            // Combine country code and phone number
+            const fullNumber = countryCode + cleanedNumber;
+            
+            // Encode the message for URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Generate the WhatsApp API URL
+            if (message) {
+                generatedUrl = `https://wa.me/${fullNumber}?text=${encodedMessage}`;
+            } else {
+                generatedUrl = `https://wa.me/${fullNumber}`;
+            }
+            
+            // Display the result
+            document.getElementById('urlDisplay').textContent = generatedUrl;
+            document.getElementById('resultSection').classList.add('show');
+            
+            // Scroll to result
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(generatedUrl).then(function() {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }).catch(function(err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = generatedUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            });
+        }
+
+        function testLink() {
+            if (generatedUrl) {
+                window.open(generatedUrl, '_blank');
+            }
+        }
+
+        // Generate initial link on page load with sample data
+        window.onload = function() {
+            document.getElementById('phoneNumber').value = '8126680011';
+            document.getElementById('message').value = 'Hello! I\'m interested in your services';
+            generateWhatsAppLink();
+        };
+
+        // Allow Enter key to generate link
+        document.getElementById('message').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                generateWhatsAppLink();
+            }
+        });
+    </script>
+</body>
+</html>
